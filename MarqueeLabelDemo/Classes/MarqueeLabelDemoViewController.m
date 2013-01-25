@@ -42,7 +42,7 @@
     durationLabel.tag = 101;
     durationLabel.numberOfLines = 1;
     durationLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-    durationLabel.textAlignment = UITextAlignmentLeft;
+    durationLabel.textAlignment = NSTextAlignmentLeft;
     durationLabel.textColor = [UIColor colorWithRed:0.234 green:0.234 blue:0.234 alpha:1.000];
     durationLabel.backgroundColor = [UIColor clearColor];
     durationLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:17.000];
@@ -61,7 +61,7 @@
     rateLabelOne.enabled = YES;
     rateLabelOne.fadeLength = 10.f;
     rateLabelOne.shadowOffset = CGSizeMake(0.0, -1.0);
-    rateLabelOne.textAlignment = UITextAlignmentRight;
+    rateLabelOne.textAlignment = NSTextAlignmentRight;
     rateLabelOne.textColor = [UIColor colorWithRed:0.234 green:0.234 blue:0.234 alpha:1.000];
     rateLabelOne.backgroundColor = [UIColor clearColor];
     rateLabelOne.font = [UIFont fontWithName:@"Helvetica-Bold" size:17.000];
@@ -77,7 +77,7 @@
     MarqueeLabel *tapToScrollLabel = [[MarqueeLabel alloc] initWithFrame:CGRectMake(10, 230, self.view.frame.size.width-20, 20) rate:50.0f andFadeLength:10.0f];
     tapToScrollLabel.numberOfLines = 1;
     tapToScrollLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-    tapToScrollLabel.textAlignment = UITextAlignmentRight;
+    tapToScrollLabel.textAlignment = NSTextAlignmentRight;
     tapToScrollLabel.textColor = [UIColor colorWithRed:0.234 green:0.234 blue:0.234 alpha:1.000];
     tapToScrollLabel.backgroundColor = [UIColor clearColor];
     tapToScrollLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:17.000];
@@ -92,7 +92,7 @@
     MarqueeLabel *rightLeftLabel = [[MarqueeLabel alloc] initWithFrame:CGRectMake(10, 260, self.view.frame.size.width-20, 20) rate:50.0f andFadeLength:10.0f];
     rightLeftLabel.numberOfLines = 1;
     rightLeftLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-    rightLeftLabel.textAlignment = UITextAlignmentRight;
+    rightLeftLabel.textAlignment = NSTextAlignmentRight;
     rightLeftLabel.textColor = [UIColor colorWithRed:0.234 green:0.234 blue:0.234 alpha:1.000];
     rightLeftLabel.backgroundColor = [UIColor clearColor];
     rightLeftLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:17.000];
@@ -111,7 +111,7 @@
     continuousLabel.opaque = NO;
     continuousLabel.enabled = YES;
     continuousLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-    continuousLabel.textAlignment = UITextAlignmentCenter;
+    continuousLabel.textAlignment = NSTextAlignmentCenter;
     continuousLabel.textColor = [UIColor colorWithRed:0.234 green:0.234 blue:0.234 alpha:1.000];
     continuousLabel.backgroundColor = [UIColor clearColor];
     continuousLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:17.000];
@@ -128,7 +128,7 @@
     continuousLabel2.opaque = NO;
     continuousLabel2.enabled = YES;
     continuousLabel2.shadowOffset = CGSizeMake(0.0, -1.0);
-    continuousLabel2.textAlignment = UITextAlignmentLeft;
+    continuousLabel2.textAlignment = NSTextAlignmentLeft;
     continuousLabel2.textColor = [UIColor colorWithRed:0.234 green:0.234 blue:0.234 alpha:1.000];
     continuousLabel2.backgroundColor = [UIColor clearColor];
     continuousLabel2.font = [UIFont fontWithName:@"Helvetica-Bold" size:17.000];
