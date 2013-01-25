@@ -66,7 +66,6 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 @property (nonatomic, assign, readwrite) BOOL awayFromHome;
 @property (nonatomic, assign) BOOL orientationWillChange;
 
-@property (nonatomic, strong) UILabel *subLabel;
 @property (nonatomic, copy) NSString *labelText;
 @property (nonatomic, assign) NSUInteger animationOptions;
 
@@ -109,7 +108,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 @synthesize marqueeType = _marqueeType;
 @synthesize continuousMarqueeSeparator;
 
-// UILabel properties for pass through WITH modification
+// FXLabel properties for pass through WITH modification
 @synthesize text;
 @dynamic adjustsFontSizeToFitWidth, lineBreakMode, numberOfLines;
 
@@ -384,7 +383,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
         
     } else {
         // Currently labelized
-        // Act like a UILabel
+        // Act like a FXLabel
         [self returnLabelToOriginImmediately];
         
         // Set text
@@ -607,7 +606,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 }
 
 #pragma mark -
-#pragma mark Modified UILabel Getters/Setters
+#pragma mark Modified FXLabel Getters/Setters
 
 // Custom labelize mutator to restart scrolling after changing labelize to NO
 - (void)setLabelize:(BOOL)labelize {
@@ -675,10 +674,10 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 #pragma mark -
 #pragma mark Custom Getters and Setters
 
-- (UILabel *)subLabel {
+- (FXLabel *)subLabel {
     if (_subLabel == nil) {
         // Create sublabel
-        _subLabel = [[UILabel alloc] initWithFrame:self.bounds];
+        _subLabel = [[FXLabel alloc] initWithFrame:self.bounds];
         [self addSubview:_subLabel];
     }
     
@@ -768,10 +767,10 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 }
 
 #pragma mark -
-#pragma mark UILabel Message Forwarding
+#pragma mark FXLabel Message Forwarding
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
-    return [UILabel instanceMethodSignatureForSelector:aSelector];
+    return [FXLabel instanceMethodSignatureForSelector:aSelector];
 }
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
@@ -779,7 +778,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
         [anInvocation invokeWithTarget:self.subLabel];
     } else {
         #if TARGET_IPHONE_SIMULATOR
-            NSLog(@"Method selector not recognized by MarqueeLabel or its contained UILabel");
+            NSLog(@"Method selector not recognized by MarqueeLabel or its contained FXLabel");
         #endif
         [super forwardInvocation:anInvocation];
     }

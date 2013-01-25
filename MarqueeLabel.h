@@ -28,6 +28,7 @@
 //  
 
 #import <UIKit/UIKit.h>
+#import "FXLabel.h"
 
 
 // MarqueeLabel types
@@ -40,6 +41,9 @@ typedef enum {
 @interface MarqueeLabel : UIView {
     
 }
+
+//FXLabel for epic customization.
+@property (nonatomic, strong) FXLabel *subLabel;
 
 // MarqueeLabel-specific properties
 
