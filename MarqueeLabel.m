@@ -66,7 +66,6 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 @property (nonatomic, assign, readwrite) BOOL awayFromHome;
 @property (nonatomic, assign) BOOL orientationWillChange;
 
-@property (nonatomic, strong) UILabel *subLabel;
 @property (nonatomic, copy) NSString *labelText;
 @property (nonatomic, assign) NSUInteger animationOptions;
 
@@ -109,7 +108,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 @synthesize marqueeType = _marqueeType;
 @synthesize continuousMarqueeSeparator;
 
-// UILabel properties for pass through WITH modification
+// FXLabel properties for pass through WITH modification
 @synthesize text;
 @dynamic adjustsFontSizeToFitWidth, lineBreakMode, numberOfLines;
 
@@ -159,10 +158,33 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
     UIViewController *controller = [[notification userInfo] objectForKey:@"controller"];
     if (controller == [self firstAvailableUIViewController]) {
         self.labelize = NO;
+        
+        if (!self.didShrinkToAnimate) {
+            self.didShrinkToAnimate = TRUE;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                CGPoint oldCenter = self.center;
+                [self setFrame:CGRectMake(0, 0, self.frame.size.width-self.fadeLength*2, self.frame.size.height)];
+                [self setCenter:oldCenter];
+            });
+            
+        }
     }
 }
 
 #pragma mark - Initialization and Label Config
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if ((self = [super initWithCoder:aDecoder]))
+    {
+        [self setupLabel];
+        self.lengthOfScroll = 2.5;
+        self.marqueeType = MLContinuous;
+        self.fadeLength = MIN(5, self.frame.size.width/2);
+
+    }
+    return self;
+}
 
 - (id)initWithFrame:(CGRect)frame {
     return [self initWithFrame:frame duration:7.0 andFadeLength:0.0];
@@ -193,6 +215,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 - (void)setupLabel {
     
     [self setClipsToBounds:YES];
+    self.didShrinkToAnimate = NO;
     self.backgroundColor = [UIColor clearColor];
     self.animationOptions = (UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionAllowUserInteraction);
     self.awayFromHome = NO;
@@ -201,7 +224,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
     _tapToScroll = NO;
     _isPaused = NO;
     self.labelText = @"";  // Set to zero-length string to start, so that self.text returns a non-nil string (allows appending, etc)
-    self.animationDelay = 1.0;
+    self.animationDelay = 10.0;
     self.animationDuration = 0.0f; // initialize animation duration
     
     // Add notification observers
@@ -384,7 +407,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
         
     } else {
         // Currently labelized
-        // Act like a UILabel
+        // Act like a FXLabel
         [self returnLabelToOriginImmediately];
         
         // Set text
@@ -560,9 +583,13 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 - (void)restartLabel {
     [self returnLabelToOriginImmediately];
     
-    if (self.labelShouldScroll && !self.tapToScroll) {
-        [self beginScroll];
-    }
+    int64_t delayInSeconds = self.restartDelay;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        if (self.labelShouldScroll && !self.tapToScroll) {
+            [self beginScroll];
+        }
+    });
 }
 
 
@@ -607,7 +634,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 }
 
 #pragma mark -
-#pragma mark Modified UILabel Getters/Setters
+#pragma mark Modified FXLabel Getters/Setters
 
 // Custom labelize mutator to restart scrolling after changing labelize to NO
 - (void)setLabelize:(BOOL)labelize {
@@ -675,10 +702,10 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 #pragma mark -
 #pragma mark Custom Getters and Setters
 
-- (UILabel *)subLabel {
+- (FXLabel *)subLabel {
     if (_subLabel == nil) {
         // Create sublabel
-        _subLabel = [[UILabel alloc] initWithFrame:self.bounds];
+        _subLabel = [[FXLabel alloc] initWithFrame:self.bounds];
         [self addSubview:_subLabel];
     }
     
@@ -768,10 +795,10 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 }
 
 #pragma mark -
-#pragma mark UILabel Message Forwarding
+#pragma mark FXLabel Message Forwarding
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
-    return [UILabel instanceMethodSignatureForSelector:aSelector];
+    return [FXLabel instanceMethodSignatureForSelector:aSelector];
 }
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
@@ -779,7 +806,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
         [anInvocation invokeWithTarget:self.subLabel];
     } else {
         #if TARGET_IPHONE_SIMULATOR
-            NSLog(@"Method selector not recognized by MarqueeLabel or its contained UILabel");
+            NSLog(@"Method selector not recognized by MarqueeLabel or its contained FXLabel");
         #endif
         [super forwardInvocation:anInvocation];
     }
