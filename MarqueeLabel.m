@@ -158,10 +158,33 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
     UIViewController *controller = [[notification userInfo] objectForKey:@"controller"];
     if (controller == [self firstAvailableUIViewController]) {
         self.labelize = NO;
+        
+        if (!self.didShrinkToAnimate) {
+            self.didShrinkToAnimate = TRUE;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                CGPoint oldCenter = self.center;
+                [self setFrame:CGRectMake(0, 0, self.frame.size.width-self.fadeLength*2, self.frame.size.height)];
+                [self setCenter:oldCenter];
+            });
+            
+        }
     }
 }
 
 #pragma mark - Initialization and Label Config
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if ((self = [super initWithCoder:aDecoder]))
+    {
+        [self setupLabel];
+        self.lengthOfScroll = 2.5;
+        self.marqueeType = MLContinuous;
+        self.fadeLength = MIN(5, self.frame.size.width/2);
+
+    }
+    return self;
+}
 
 - (id)initWithFrame:(CGRect)frame {
     return [self initWithFrame:frame duration:7.0 andFadeLength:0.0];
@@ -192,6 +215,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 - (void)setupLabel {
     
     [self setClipsToBounds:YES];
+    self.didShrinkToAnimate = NO;
     self.backgroundColor = [UIColor clearColor];
     self.animationOptions = (UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionAllowUserInteraction);
     self.awayFromHome = NO;
@@ -200,7 +224,7 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
     _tapToScroll = NO;
     _isPaused = NO;
     self.labelText = @"";  // Set to zero-length string to start, so that self.text returns a non-nil string (allows appending, etc)
-    self.animationDelay = 1.0;
+    self.animationDelay = 10.0;
     self.animationDuration = 0.0f; // initialize animation duration
     
     // Add notification observers
@@ -559,9 +583,13 @@ NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAni
 - (void)restartLabel {
     [self returnLabelToOriginImmediately];
     
-    if (self.labelShouldScroll && !self.tapToScroll) {
-        [self beginScroll];
-    }
+    int64_t delayInSeconds = self.restartDelay;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        if (self.labelShouldScroll && !self.tapToScroll) {
+            [self beginScroll];
+        }
+    });
 }
 
 

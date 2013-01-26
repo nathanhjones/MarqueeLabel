@@ -43,6 +43,7 @@ typedef enum {
 }
 
 //FXLabel for epic customization.
+@property (nonatomic, assign) BOOL didShrinkToAnimate;
 @property (nonatomic, strong) FXLabel *subLabel;
 
 // MarqueeLabel-specific properties
@@ -111,6 +112,10 @@ typedef enum {
  */
 @property (nonatomic, assign) CGFloat animationDelay;
 
+/* restartDelay
+ * Sets how long the label waits to restart after returning from background.
+ */
+@property (nonatomic, assign) CGFloat restartDelay;
 
 /* tapToScroll:
  * If YES, when tapped the label will scroll through its cycle once.
@@ -122,6 +127,7 @@ typedef enum {
 
 // Read-only properties for state
 @property (nonatomic, assign, readonly) BOOL isPaused;
+
 
 
 // Class Methods
